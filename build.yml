@@ -1,0 +1,36 @@
+name: Build Geode Mod
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Geode CLI
+        run: |
+          curl -L https://github.com/geode-sdk/cli/releases/latest/download/geode-linux-x86_64 -o geode
+          chmod +x geode
+          sudo mv geode /usr/local/bin/geode
+
+      - name: Install Geode SDK
+        run: |
+          geode sdk install v5.10.1
+          geode sdk install-binaries
+
+      - name: Build Mod
+        run: |
+          geode build
+
+      - name: Upload Mod
+        uses: actions/upload-artifact@v4
+        with:
+          name: geode-mod
+          path: build/*.geode

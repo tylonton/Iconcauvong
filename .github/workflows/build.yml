@@ -14,8 +14,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Geode
-        uses: geode-sdk/cli@main
+      - name: Install Geode CLI
+        run: |
+          curl -L https://github.com/geode-sdk/cli/releases/latest/download/geode-linux-x86_64 -o geode
+          chmod +x geode
+          sudo mv geode /usr/local/bin/geode
 
       - name: Install Geode SDK
         run: |
@@ -24,7 +27,6 @@ jobs:
 
       - name: Build Mod
         run: |
-          mkdir -p build
           geode build
 
       - name: Upload Mod
